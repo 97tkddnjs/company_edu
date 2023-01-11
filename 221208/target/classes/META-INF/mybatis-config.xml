@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<mappers>
+		<mapper resource="META-INF/transactiontest-mapper.xml" />
+		<mapper resource="META-INF/mybatis-mapper.xml" />
+		<mapper resource="META-INF/ajax2-mapper.xml" />
+		<mapper resource="META-INF/ajax-mapper.xml" />
+		<mapper resource="META-INF/boardfree-mapper.xml" />
+		<mapper resource="META-INF/boardmamber-mapper.xml" />
+		<mapper resource="META-INF/dyboard-mapper.xml" />
+		<mapper resource="META-INF/login-mapper.xml" />
+		<mapper resource="META-INF/newboard-mapper.xml" />
+	</mappers>
+</configuration>
+<!-- config 안에 넣으면 에러 가능성 높음 <mapper resource="META-INF/ajax-mapper.xml" /> -->

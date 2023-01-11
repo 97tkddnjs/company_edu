@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="TranssactionTestMapper">
+
+	<insert id="insOrderMain" parameterType="kr.co.kico.transaction.TransactionTestDTO">
+		insert into order_main(order_main_no, order_date) 
+		values(seq_order_main_no.nextval, sysdate)
+		<selectKey order="AFTER" keyProperty="order_main_no" resultType="String">
+			select seq_order_main_no.currval from dual
+		</selectKey>
+	</insert>
+	
+	<insert id="insOrderDetail1" parameterType="kr.co.kico.transaction.TransactionTestDTO">
+		insert into order_detail(order_detail_no, order_main_no, product_name, order_qty) 
+		values(seq_order_detail_no.nextval, #{order_main_no}, '신라면', 10)
+	</insert>
+	
+	<insert id="insOrderDetail12" parameterType="kr.co.kico.transaction.TransactionTestDTO">
+		insert into order_detail(order_detail_no, order_main_no, product_name, order_qty) 
+		values(seq_order_detail_no.nextval, #{order_main_no}, '삼다수', 18)
+	</insert>
+
+</mapper>

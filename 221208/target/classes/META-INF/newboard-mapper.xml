@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="NewBoardMapper">
+
+	<select id="findById" resultType="kr.co.kico.newboard.dto.MemberDTO" parameterType="java.lang.String" >
+		select member_id ,  member_login_id , member_pwd , member_group_id , member_grade_id , member_deleted
+		from member2 
+		where member_login_id = #{member_login_id} and member_deleted=0
+	</select>
+	
+	<insert id = "memberSave"  parameterType= "kr.co.kico.newboard.dto.MemberDTO" >
+		insert into member2 (member_id ,member_login_id , member_pwd , member_group_id , member_grade_id , member_deleted)
+		values (seq_member2.nextval,  #{member_login_id} ,#{member_pwd} , to_number(#{member_group_id} ), to_number(#{member_grade_id} ), to_number(#{member_deleted} ))
+	</insert>	
+	
+	<insert id = "menusave"  parameterType= "java.lang.String" >
+		insert into menu_type (menu_type_id ,menu_type_name , menu_type_deleted)
+		values (seq_menu_type.nextval,  #{menutype} ,0 )
+	</insert>	
+	
+	<insert id = "inboard"  parameterType= "kr.co.kico.newboard.dto.BoardTypeDTO" >
+		insert into board (board_id ,board_name , menu_type_id,board_deleted)
+		values (seq_board.nextval,  #{board_name},#{menu_type_id} ,0 )
+	</insert>
+	
+	<select id="menulist" resultType="kr.co.kico.newboard.dto.MenuTypeDTO">
+		select menu_type_name from menu_type where menu_type_deleted = 0 order by menu_type_id
+	</select>
+	
+	<select id="menuboardlist" resultType="kr.co.kico.newboard.dto.MenuBoardDTO">
+		with mtb as(
+
+    		select 
+            		m.menu_type_name ,
+            		b.board_id
+		        from    menu_type m left outer join board b
+            			on m.menu_type_id = b.menu_type_id 
+            	
+
+			)
+			select
+			        A.menu_type_name   as  menu_type_name    ,
+			        count(B.bseq)      as cnt           
+			from    mtb A left join board_detail B
+       				 on A.board_id =B.board_id
+			where   B.board_detail_deleted = 0 or B.board_detail_deleted is null 
+			group by  A.menu_type_name 
+	</select>
+	
+	<select id="selectAllMember" resultType="kr.co.kico.newboard.dto.MemberDTO">
+		select member_id ,  member_login_id , member_pwd , member_group_id , member_grade_id , member_deleted
+		from member2 
+		where member_grade_id = 2 and
+			  member_deleted =0
+	</select>
+	
+	<select id="selectMember" resultType="kr.co.kico.newboard.dto.MemberDTO" parameterType="int">
+		select member_id ,  member_login_id , member_pwd , member_group_id , member_grade_id , member_deleted
+		from member2 
+		where member_grade_id = 2 and
+			  member_deleted =0 and
+			  member_id=#{member_id}
+	</select>
+	<select id="menuTypeList" resultType="kr.co.kico.newboard.dto.MenuTypeDTO">
+		select  menu_type_id, menu_type_name
+		from menu_type 
+		where menu_type_deleted =0
+		order by menu_type_id
+	</select>
+	
+	<select id="boardTypeList" resultType="kr.co.kico.newboard.dto.BoardTypeDTO">
+		select  board_id, board_name, menu_type_id
+		from board 
+		where board_deleted =0
+	</select>
+	
+	<select id="selectAllBoard" resultType="kr.co.kico.newboard.dto.BoardDTO">
+			select  M.menu_type_name, BD.board_id, B.board_name,
+        			BD.bseq, BD.member_login_id, BD.bname, BD.add_file_name, BD.add_file_path, BD.bdate, BD.cnts
+
+			from board B, menu_type M,  board_detail BD 
+			where   B.menu_type_id = M.menu_type_id and
+			        B.board_id = BD.board_id and
+			        board_detail_deleted =0 and
+			        menu_type_deleted = 0  and
+			        board_deleted = 0
+	</select>
+	
+	<select id="menuTypeBoardDetail" resultType="kr.co.kico.newboard.dto.BoardDTO" parameterType= "kr.co.kico.newboard.dto.MenuBoardDetailDTO">
+			select  M.menu_type_name, BD.board_id, B.board_name,
+        			BD.bseq, BD.member_login_id, BD.bname, BD.add_file_name, BD.add_file_path, BD.bdate , BD.cnts
+
+			from board B, menu_type M,  board_detail BD 
+			where   B.menu_type_id = M.menu_type_id and
+			        B.board_id = BD.board_id and
+			        board_detail_deleted =0 and
+			        menu_type_deleted = 0  and
+			        board_deleted = 0	and
+			        M.menu_type_name = #{menu_type_name} and
+			        B.board_name = #{board_name}
+	</select>
+	
+	<select id="boardDetail" resultType="kr.co.kico.newboard.dto.BoardDTO" parameterType= "int">
+			select	bseq, board_id, member_login_id , bname , add_file_name , add_file_path , bdate, cnts
+			from board_detail BD 
+			where	BD.bseq = #{board_id}
+	</select>
+	
+	<delete id="menuTypeDelete" parameterType="java.lang.String">
+		delete from menu_type where menu_type_name =#{menu_type_name}
+	</delete>
+	
+	
+	<insert id = "boardDetailIn"  parameterType= "kr.co.kico.newboard.dto.BoardDTO" >
+		insert into board_detail (bseq ,board_id ,member_login_id, bname , cnts , add_file_name , add_file_path, bdate,board_detail_deleted)
+		values (seq_board_detail.nextval,  #{board_id} ,#{member_login_id} ,#{bname} ,#{cnts} ,#{add_file_name} ,#{add_file_path},sysdate,#{board_detail_deleted} )
+	</insert>
+		
+	<select id="allboard" resultType="kr.co.kico.newboard.dto.BoardDTO" >
+			select  M.menu_type_name, BD.board_id, B.board_name,
+        			BD.bseq, BD.member_login_id, BD.bname, BD.add_file_name, BD.add_file_path, BD.bdate , BD.cnts
+
+			from board B, menu_type M,  board_detail BD 
+			where   B.menu_type_id = M.menu_type_id and
+			        B.board_id = BD.board_id and
+			        board_detail_deleted =0 and
+			        menu_type_deleted = 0  and
+			        board_deleted = 0
+	</select>
+	
+	<update id = "updateBoard"  parameterType= "kr.co.kico.newboard.dto.BoardDTO" >
+	<![CDATA[
+		update board_detail 
+		set cnts = #{cnts},
+		bdate = sysdate,
+		add_file_name = #{add_file_name},
+		add_file_path = #{add_file_path}
+		where bseq = #{bseq}
+		]]>
+	</update>
+	
+	<delete id="boardDelete" parameterType="int">
+		delete from board_detail where bseq=#{bseq}
+	</delete>
+	
+</mapper>
+

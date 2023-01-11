@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="BoardMemberMapper">
+
+	<select id="checkBoardMember" parameterType = "java.lang.String"  resultType="int">
+		select count(mid) idCnt from member where mid = #{id}
+	</select>
+	
+	<insert id="insBoardMember" parameterType="kr.co.kico.mywork.BoardDTO">
+		insert into member (mno, mid, mpwd, mname)
+		values( seq_mno.nextval, #{mid}, #{mpwd}, #{mname})
+	</insert>
+	
+</mapper>

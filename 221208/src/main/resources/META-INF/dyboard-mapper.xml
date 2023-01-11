@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="DyBoardMapper">
+
+	
+	
+	<select id="selectAllBoardType" resultType="kr.co.kico.dynamicboard.DyBoardTypeDTO" >
+		select board_type_num, board_type_name from BOARD_TYPE order by board_type_num
+	</select>
+	
+	<insert id="insBoardType" parameterType="java.lang.String">
+		insert into BOARD_TYPE (board_type_num, board_type_name)
+		values( seq_btno.nextval, #{typename} )
+	</insert>
+	
+	<select id="selectAllByBoardType" resultType="kr.co.kico.dynamicboard.BoardDTO" parameterType="int">
+		select BNAME, WRITER, BDATE, board_type_num from BOARD_LIST where board_type_num=#{board_type_num}  order by BSEQ DESC
+	</select>
+	
+	<select id="typenameTonum" resultType="int" parameterType="java.lang.String">
+		select board_type_num from BOARD_TYPE where board_type_name=#{name}
+	</select>
+	
+	
+	<insert id="insBoard" parameterType="kr.co.kico.dynamicboard.BoardDTO">
+		insert into BOARD_LIST (bseq, bname, writer,cnts,add_file_name, add_file_path,bdate,board_type_num)
+		values( seq_dbno.nextval, #{bname}, #{writer}, #{cnts}, #{add_file_name}, #{add_file_path}, sysdate,#{board_type_num} )
+	</insert>
+	
+</mapper>

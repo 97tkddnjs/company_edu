@@ -1,0 +1,28 @@
+package kr.co.kico.ditest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.co.kico.board.free.BoardFreeController;
+
+@Controller
+public class DITestController {
+
+	private static final Logger logger = LoggerFactory.getLogger(BoardFreeController.class);
+
+	@Autowired
+	private DitestService service;
+	
+	@RequestMapping( value = "/ditest" , method = RequestMethod.GET)
+	public String diTest()
+	{
+		service.print();
+		return "start/home";
+	} // diTest
+	
+	
+}// class

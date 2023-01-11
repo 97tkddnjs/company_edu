@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="BoardFreeMapper">
+
+	<insert id="insBoardFree" parameterType="kr.co.kico.file.FileTestDTO3">
+		insert into board_free (bno, title, writer, cnts, add_file_name, add_file_path, bdate)
+		values( seq_bno.nextval, #{title}, #{writer}, #{cnts}, #{add_file_name}, #{add_file_path}, sysdate )
+	</insert>
+	
+	<select id="selectList" resultType="kr.co.kico.file.FileTestDTO3">
+		select bno, title, writer,  bdate from board_free order by bno desc
+	</select>
+	
+	<select id="selectOne" resultType="kr.co.kico.file.FileTestDTO3" parameterType="java.lang.String">
+		select bno, title, writer, cnts, add_file_name, add_file_path, bdate from board_free where bno = #{bno}
+	</select>
+</mapper>
